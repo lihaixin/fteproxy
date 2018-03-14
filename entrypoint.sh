@@ -1,6 +1,11 @@
 #!/bin/sh
 KEY=`xxd -p -c32 /dev/urandom | head -n1`
-fteproxy --mode server \
+
+if [ ! -f "$EXECFILE" ]; then
+	ln -s /usr/bin/fteproxy $EXECFILE
+fi
+
+$EXECFILE --mode server \
              --upstream-format $UPSTREAM_FORMAT \
              --downstream-format $DOWNSTREAM_FORMAT \
              --client_ip $CLIENT_IP \
@@ -11,7 +16,7 @@ fteproxy --mode server \
              --proxy_port $PROXY_PORT \
              --release $RELEASE \
              --key $KEY  &
-fteproxy --mode client \
+$EXECFILE --mode client \
              --upstream-format $UPSTREAM_FORMAT \
              --downstream-format $DOWNSTREAM_FORMAT \
              --client_ip $CLIENT_IP \
